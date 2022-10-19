@@ -20,6 +20,46 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('adminassets/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    {{-- {{ app()->currentLocale() }} --}}
+
+    @if (app()->currentLocale() == 'ar')
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal&display=swap');
+
+        body {
+            direction: rtl;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .sidebar {
+            padding: 0
+        }
+
+        .sidebar .nav-item .nav-link {
+            text-align: right;
+        }
+
+        .sidebar .nav-item .nav-link[data-toggle=collapse]::after {
+            float: left;
+            transform: rotate(180deg)
+        }
+
+        .ml-auto, .mx-auto {
+            margin-left: unset!important;
+            margin-right: auto!important;
+        }
+
+        .topbar .dropdown .dropdown-menu {
+    width: auto;
+    right: -50%;
+}
+
+    </style>
+
+    @endif
+
 </head>
 
 <body id="page-top">
@@ -45,7 +85,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>{{ __('site.dashboard') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -56,7 +96,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory"
                     aria-expanded="true" aria-controls="collapseCategory">
                     <i class="fas fa-fw fa-tags"></i>
-                    <span>Categories</span>
+                    <span>{{ __('site.categories') }}</span>
                 </a>
                 <div id="collapseCategory" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -74,7 +114,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct"
                     aria-expanded="true" aria-controls="collapseProduct">
                     <i class="fas fa-fw fa-heart"></i>
-                    <span>Products</span>
+                    <span>{{ __('site.products') }}</span>
                 </a>
                 <div id="collapseProduct" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -90,7 +130,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-shopping-cart"></i>
-                    <span>Orders</span></a>
+                    <span>{{ __('site.orders') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -99,7 +139,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-money-bill"></i>
-                    <span>Payments</span></a>
+                    <span>{{ __('site.payments') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -108,7 +148,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Customers</span></a>
+                    <span>{{ __('site.customers') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -138,6 +178,28 @@
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Languages
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+
+                                        <a class="dropdown-item" rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                            <img width="20" src="{{ asset('adminassets/img/'.$properties['flag']) }}" alt="">
+                                            {{ $properties['native'] }}
+                                        </a>
+
+                                @endforeach
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
 
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
