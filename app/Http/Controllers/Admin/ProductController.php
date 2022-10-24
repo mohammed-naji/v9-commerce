@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +17,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // $categories = Category::orderByDesc('id')->whereNull('parent_id')->paginate(10);
-        $categories = Category::orderByDesc('id')->paginate(10);
-        return view('admin.categories.index', compact('categories'));
+        // $categories = Product::orderByDesc('id')->whereNull('parent_id')->paginate(10);
+        $products = Product::orderByDesc('id')->paginate(10);
+        return view('admin.products.index', compact('products'));
     }
 
     /**
@@ -28,8 +29,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::whereNull('parent_id')->get();
-        return view('admin.categories.create', compact('categories'));
+        $categories = Category::all();
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
@@ -43,26 +44,35 @@ class CategoryController extends Controller
         // Validate Data
         $request->validate([
             'name_en' => 'required',
-            'name_ar' => 'required'
+            'name_ar' => 'required',
+            'image' => 'required',
+            'description_en' => 'required',
+            'description_ar' => 'required',
+            'price' => 'required',
+            'quantity' => 'required',
+            'category_id' => 'required'
         ]);
 
         // Store Files
-        $img_name = 'no-image.png';
-        if($request->hasFile('image')) {
-            $img_name = rand().time().$request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('uploads/categories'), $img_name);
-        }
+        $img_name = rand().time().$request->file('image')->getClientOriginalName();
+        $request->file('image')->move(public_path('uploads/products'), $img_name);
+
 
         // Store In Database
-        Category::create([
+        Product::create([
             'name_en' => $request->name_en,
             'name_ar' => $request->name_ar,
             'image' => $img_name,
-            'parent_id' => $request->parent_id
+            'description_en' => $request->description_en,
+            'description_ar' => $request->description_ar,
+            'price' => $request->price,
+            'sale_price' => $request->sale_price,
+            'quantity' => $request->quantity,
+            'category_id' => $request->category_id,
         ]);
 
         // redirect
-        return redirect()->route('admin.categories.index')->with('msg', 'Category added successfully')->with('type', 'success');
+        return redirect()->route('admin.products.index')->with('msg', 'Product added successfully')->with('type', 'success');
     }
 
     /**
@@ -82,10 +92,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Product $product)
     {
-        $categories = Category::whereNull('parent_id')->get();
-        return view('admin.categories.edit', compact('category', 'categories'));
+        $categories = Product::whereNull('parent_id')->get();
+        return view('admin.categories.edit', compact('product', 'categories'));
     }
 
     /**
@@ -95,7 +105,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Product $product)
     {
         dd($request->all());
         // Validate Data
@@ -105,16 +115,16 @@ class CategoryController extends Controller
         ]);
 
         // Store Files
-        $img_name = $category->image;
+        $img_name = $product->image;
         if($request->hasFile('image')) {
             // if($img_name != )
-            File::delete('uploads/categories/'.$category->image);
+            File::delete('uploads/categories/'.$product->image);
             $img_name = rand().time().$request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path('uploads/categories'), $img_name);
         }
 
         // Store In Database
-        $category->update([
+        $product->update([
             'name_en' => $request->name_en,
             'name_ar' => $request->name_ar,
             'image' => $img_name,
@@ -122,7 +132,7 @@ class CategoryController extends Controller
         ]);
 
         // redirect
-        return redirect()->route('admin.categories.index')->with('msg', 'Category updated successfully')->with('type', 'warning');
+        return redirect()->route('admin.categories.index')->with('msg', 'Product updated successfully')->with('type', 'warning');
     }
 
     /**
@@ -133,15 +143,13 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
+        $product = Product::findOrFail($id);
 
-        File::delete('uploads/categories/'.$category->image);
+        File::delete('uploads/products/'.$product->image);
 
-        Category::where('parent_id', $id)->update(['parent_id' => 1]);
-        // Category::where('parent_id', $id)->delete();
 
-        $category->delete();
+        $product->delete();
 
-        return redirect()->route('admin.categories.index')->with('msg', 'Category deleted successfully')->with('type', 'danger');
+        return redirect()->route('admin.products.index')->with('msg', 'Product deleted successfully')->with('type', 'danger');
     }
 }
