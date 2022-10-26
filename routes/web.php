@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\FrontController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // Route::group(['prefix' => LaravelLocalization::setLocale()], function()
@@ -13,16 +14,23 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 Route::prefix(LaravelLocalization::setLocale())->group(function() {
 
 Route::prefix('admin')->name('admin.')->middleware('auth', 'check_admin')->group(function() {
+
     Route::get('/', [AdminController::class, 'index'])->name('index');
 
     Route::resource('categories', CategoryController::class);
+
     Route::resource('products', ProductController::class);
+
+    Route::get('orders', [AdminController::class, 'orders'])->name('orders');
+    Route::get('orders/{id}', [AdminController::class, 'orders_details'])->name('orders_details')->whereNumber('id');
+
+    Route::get('payments', [AdminController::class, 'payments'])->name('payments');
+
+    Route::get('customers', [AdminController::class, 'customers'])->name('customers');
 
 });
 
-Route::get('/', function() {
-    return view('welcome');
-})->name('site.home');
+Route::get('/', [FrontController::class, 'index'])->name('site.home');
 
 Auth::routes();
 

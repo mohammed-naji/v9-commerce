@@ -30,7 +30,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        $product = new Product();
+        return view('admin.products.create', compact('categories', 'product'));
     }
 
     /**
@@ -94,8 +95,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $categories = Product::whereNull('parent_id')->get();
-        return view('admin.categories.edit', compact('product', 'categories'));
+        $categories = Category::get();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -107,32 +108,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        dd($request->all());
         // Validate Data
         $request->validate([
             'name_en' => 'required',
-            'name_ar' => 'required'
+            'name_ar' => 'required',
+            'description_en' => 'required',
+            'description_ar' => 'required',
+            'price' => 'required',
+            'quantity' => 'required',
+            'category_id' => 'required'
         ]);
 
-        // Store Files
         $img_name = $product->image;
         if($request->hasFile('image')) {
-            // if($img_name != )
-            File::delete('uploads/categories/'.$product->image);
+            // Store Files
+            File::delete('uploads/products/'.$product->image);
             $img_name = rand().time().$request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('uploads/categories'), $img_name);
+            $request->file('image')->move(public_path('uploads/products'), $img_name);
         }
+
+
 
         // Store In Database
         $product->update([
             'name_en' => $request->name_en,
             'name_ar' => $request->name_ar,
             'image' => $img_name,
-            'parent_id' => $request->parent_id
+            'description_en' => $request->description_en,
+            'description_ar' => $request->description_ar,
+            'price' => $request->price,
+            'sale_price' => $request->sale_price,
+            'quantity' => $request->quantity,
+            'category_id' => $request->category_id,
         ]);
 
         // redirect
-        return redirect()->route('admin.categories.index')->with('msg', 'Product updated successfully')->with('type', 'warning');
+        return redirect()->route('admin.products.index')->with('msg', 'Product updated successfully')->with('type', 'warning');
     }
 
     /**
