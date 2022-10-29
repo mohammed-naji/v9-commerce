@@ -31,6 +31,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth', 'check_admin')->group
 });
 
 Route::get('/', [FrontController::class, 'index'])->name('site.home');
+Route::get('/about', [FrontController::class, 'about'])->name('site.about');
+Route::get('/shop', [FrontController::class, 'shop'])->name('site.shop');
+Route::get('/contact', [FrontController::class, 'contact'])->name('site.contact');
+Route::get('/category/{id}', [FrontController::class, 'category'])->name('site.category');
 
 Auth::routes();
 

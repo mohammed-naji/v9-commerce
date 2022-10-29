@@ -18,10 +18,10 @@ FACEBOOK: https://www.facebook.com/themefisher
 [Table of contents]
 
 1. Body
-	2. Header 
-		2.1. Navigation 
-		2.2. Menu 
-		2.3. Cart 
+	2. Header
+		2.1. Navigation
+		2.2. Menu
+		2.3. Cart
 	3. Banner
 		3.1 Revolution Slider
 	4. Products
@@ -29,7 +29,7 @@ FACEBOOK: https://www.facebook.com/themefisher
 		4.2 Single Product
 	5. Pricing
 	6. Clients
-	7. Instagram Feed 
+	7. Instagram Feed
 	8. User Dashboard
 		8.1 User Profile
 	9. Blog
@@ -48,12 +48,12 @@ FACEBOOK: https://www.facebook.com/themefisher
 		13.5 Empty Cart
 		13.6 Success Message
 	14.404 Page
-	15. Contact 
-		15.1  Contact Form 
+	15. Contact
+		15.1  Contact Form
 		15.2 Contact Details
 		15.3 Social Icons
 	16.Footer
-	
+
 
 -------------------------------------------------------------------*/
 /*=== MEDIA QUERY ===*/
@@ -1087,7 +1087,8 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focu
 
 .product-item .product-thumb img {
   width: 100%;
-  height: auto;
+  height: 250px;
+  object-fit: contain;
 }
 
 .product-item .product-thumb .bage {
