@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('product_id');
             $table->foreignId('order_id');
             $table->double('price');
-            $table->integer('quantity');
+            $table->integer('quantity')->default(0);
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -35,6 +36,14 @@ Route::get('/about', [FrontController::class, 'about'])->name('site.about');
 Route::get('/shop', [FrontController::class, 'shop'])->name('site.shop');
 Route::get('/contact', [FrontController::class, 'contact'])->name('site.contact');
 Route::get('/category/{id}', [FrontController::class, 'category'])->name('site.category');
+Route::get('/product/{id}', [FrontController::class, 'product'])->name('site.product');
+
+
+// Carts Routes
+Route::post('add-to-cart', [CartController::class, 'add_to_cart'])->name('site.add_to_cart');
+
+
+
 
 Auth::routes();
 
