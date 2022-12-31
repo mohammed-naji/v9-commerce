@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariate;
+use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FrontController extends Controller
 {
@@ -52,7 +54,29 @@ class FrontController extends Controller
         // dd($colors);
 
 
-        return view('front.product', compact('product', 'next', 'prev', 'colors', 'sizes'));
+        $related = Product::where('category_id', $product->category_id)
+        ->where('id', '!=', $id)->get();
+        // dd($related);
+
+
+        return view('front.product', compact('product', 'next', 'prev', 'colors', 'sizes', 'related'));
+    }
+
+    public function product_rate(Request $request, $id)
+    {
+        $request->validate([
+            'star' => 'required',
+            'content' => 'required',
+        ]);
+
+        Review::create([
+            'content' => $request->content,
+            'star' => $request->star,
+            'product_id' => $id,
+            'user_id' => Auth::id()
+        ]);
+
+        return redirect()->back();
     }
 
 }

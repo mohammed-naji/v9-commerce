@@ -103,28 +103,34 @@ $name = 'name_' . app()->currentLocale();
                                 @php
                                     $total = 0;
                                 @endphp
+
+                                {{-- @if (Auth::check()) --}}
+
+                                @auth
                                 @foreach (Auth::user()->carts as $cart)
                                     <!-- Cart Item -->
-                                <div class="media">
-                                    <a class="pull-left" href="#!">
-                                        <img class="media-object"
-                                            src="{{ asset('uploads/products/'.$cart->product->image) }}"
-                                            alt="image" />
-                                    </a>
-                                    <div class="media-body">
-                                        <h4 class="media-heading"><a href="#!">{{ $cart->product->$name }}</a></h4>
-                                        <div class="cart-price">
-                                            <span>{{ $cart->quantity }} x</span>
-                                            <span>{{ $cart->price }}</span>
+                                    <div class="media">
+                                        <a class="pull-left" href="#!">
+                                            <img class="media-object"
+                                                src="{{ asset('uploads/products/'.$cart->product->image) }}"
+                                                alt="image" />
+                                        </a>
+                                        <div class="media-body">
+                                            <h4 class="media-heading"><a href="{{ route('site.product', $cart->product_id) }}">{{ $cart->product->$name }}</a></h4>
+                                            <div class="cart-price">
+                                                <span>{{ $cart->quantity }} x</span>
+                                                <span>{{ $cart->price }}</span>
+                                            </div>
+                                            @php
+                                                $total += $cart->quantity * $cart->price;
+                                            @endphp
+                                            <h5><strong>${{ $cart->quantity * $cart->price }}</strong></h5>
                                         </div>
-                                        @php
-                                            $total += $cart->quantity * $cart->price;
-                                        @endphp
-                                        <h5><strong>${{ $cart->quantity * $cart->price }}</strong></h5>
-                                    </div>
-                                    <a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-                                </div><!-- / Cart Item -->
-                                @endforeach
+                                        <a href="{{ route('site.remove_cart', $cart->id) }}" class="remove"><i class="tf-ion-close"></i></a>
+                                    </div><!-- / Cart Item -->
+                                    @endforeach
+                                {{-- @endif --}}
+                                @endauth
 
 
                                 <div class="cart-summary">
@@ -132,8 +138,8 @@ $name = 'name_' . app()->currentLocale();
                                     <span class="total-price">${{ number_format($total) }}</span>
                                 </div>
                                 <ul class="text-center cart-buttons">
-                                    <li><a href="cart.html" class="btn btn-small">View Cart</a></li>
-                                    <li><a href="checkout.html" class="btn btn-small btn-solid-border">Checkout</a>
+                                    <li><a href="{{ route('site.cart') }}" class="btn btn-small">View Cart</a></li>
+                                    <li><a href="{{ route('site.checkout') }}" class="btn btn-small btn-solid-border">Checkout</a>
                                     </li>
                                 </ul>
                             </div>

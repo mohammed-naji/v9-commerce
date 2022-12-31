@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class Review extends Model
 {
     use HasFactory;
 
@@ -13,12 +13,11 @@ class Payment extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->withDefault();
+        return $this->belongsTo(User::class);
     }
 
-    public function order()
+    public function product()
     {
-        return $this->belongsTo(Order::class)->withDefault();
+        return $this->belongsTo(Product::class);
     }
-
 }
